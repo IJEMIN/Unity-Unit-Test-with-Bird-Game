@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="$PROJECT_DIR$" t="IncludeRecursive">
+      <e p="Assets" t="Include">
+        <e p="Bird.cs" t="Include" />
+        <e p="ColumnPool.cs" t="Include" />
+        <e p="GameManager.cs" t="Include" />
+        <e p="RepeatingBackground.cs" t="Include" />
+        <e p="ScrollingObject.cs" t="Include" />
+      </e>
+      <e p="Flappy Bird.csproj" t="IncludeRecursive" />
+      <e p="Flappy Bird.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+      <e p="Temp/UnityVS_bin/Debug" t="ExcludeRecursive" />
+      <e p="Temp/UnityVS_obj/Debug" t="ExcludeRecursive" />
+    </e>
+    <e p="$USER_HOME$/Library/Caches/Rider2017.3/resharper-host/local/Transient/ReSharperHost/v11/SolutionCaches/_Flappy Bird.1643123988.00" t="ExcludeRecursive" />
+  </component>
+</project>
