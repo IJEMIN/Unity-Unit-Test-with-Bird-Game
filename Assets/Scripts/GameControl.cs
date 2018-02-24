@@ -4,33 +4,43 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class GameControl : MonoBehaviour 
+public class GameControl : MonoBehaviour
 {
-	public static GameControl instance;         //A reference to our game control script so we can access it statically.
-	public Text scoreText;                      //A reference to the UI text component that displays the player's score.
-	public GameObject gameOvertext;             //A reference to the object that displays the text which appears when the player dies.
+	private static GameControl instance; //A reference to our game control script so we can access it statically.
+	public Text scoreText; //A reference to the UI text component that displays the player's score.
+	public GameObject gameOvertext; //A reference to the object that displays the text which appears when the player dies.
 
-	public int score { get; private set; }                      //The player's score.
-	public bool gameOver = false;               //Is the game over?
+	public int score { get; private set; } //The player's score.
+	public bool gameOver = false; //Is the game over?
 	public float scrollSpeed = -1.5f;
 
 
-	void Awake()
+	public static GameControl Instance
 	{
-		//If we don't currently have a game control...
-		if (instance == null)
-			//...set this one to be it...
-			instance = this;
-		//...otherwise...
-		else if(instance != this)
-			//...destroy this one because it is a duplicate.
-			Destroy (gameObject);
+		get
+		{
+			if (instance != null)
+			{
+				return instance;
+			}
+			else
+			{
+				instance = FindObjectOfType<GameControl>();
+
+				if (instance == null)
+				{
+					instance = new GameObject().AddComponent<GameControl>();
+				}
+			}
+
+			return instance;
+		}
 	}
 
 	void Update()
 	{
 		//If the game is over and the player has pressed some input...
-		if (gameOver && Input.GetMouseButtonDown(0)) 
+		if (gameOver && Input.GetMouseButtonDown(0))
 		{
 			//...reload the current scene.
 			SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
@@ -54,9 +64,20 @@ public class GameControl : MonoBehaviour
 
 	public void BirdDied()
 	{
-		//Activate the game over text.
-		gameOvertext.SetActive (true);
+		if (gameOvertext != null)
+		{
+			//Activate the game over text.
+			gameOvertext.SetActive(true);
+		}
+
 		//Set the game to be over.
 		gameOver = true;
 	}
+
+	public void Reset()
+	{
+		gameOver = false;
+		score = 0;
+	}
+
 }

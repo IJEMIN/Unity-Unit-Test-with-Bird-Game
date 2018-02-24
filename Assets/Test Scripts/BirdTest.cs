@@ -29,6 +29,8 @@ namespace FlappyBird.PlayModeTest
             bird = instance.AddComponent<Bird>();
 
             bird.upForce = 500f;
+            
+            GameControl.Instance.Reset();
         }
 
         [UnityTest]
@@ -57,6 +59,7 @@ namespace FlappyBird.PlayModeTest
             Assert.AreEqual(true, bird.IsDead);
 
         }
+        
 
         [UnityTest]
         public IEnumerator _Down_Fire1_Button_to_Bird_Jump_Up()
@@ -77,12 +80,9 @@ namespace FlappyBird.PlayModeTest
 
 
         [UnityTest]
-        public IEnumerator _Down_Fire1_Button_to_Bird_Speed_Not_Negative()
+        public IEnumerator _Bird_Jump_to_Bird_Speed_Not_Negative()
         {
-            var unityInput = Substitute.For<IUnityInputService>();
-            unityInput.GetButtonDown("Fire1").Returns(true);
-
-            bird.UnityInput = unityInput;
+            bird.Jump();
 
             yield return null;
 
@@ -93,14 +93,13 @@ namespace FlappyBird.PlayModeTest
         
 
         [UnityTest]
-        public IEnumerator _Down_Fire1_After_2sec_to_Bird_Y_Speed_Not_Negative()
+        public IEnumerator _Jump_After_2sec_to_Bird_Y_Speed_Not_Negative()
         {
 
 
             yield return new WaitForSeconds(2.0f);
-            var unityInput = Substitute.For<IUnityInputService>();
-            unityInput.GetButtonDown("Fire1").Returns(true);
-            bird.UnityInput = unityInput;
+            
+            bird.Jump();
             
             yield return null;
 
@@ -113,11 +112,8 @@ namespace FlappyBird.PlayModeTest
         [UnityTest]
         public IEnumerator _Bird_Trigger_Collide_With_Column_Tag_to_Add_Score()
         {
-            var gameContorl = new GameObject().AddComponent<GameControl>();
 
-            yield return null;
-
-            var score = gameContorl.score;
+            var score = GameControl.Instance.score;
 
             var collider = new GameObject().AddComponent<BoxCollider2D>();
             collider.tag = "Column";
@@ -126,52 +122,47 @@ namespace FlappyBird.PlayModeTest
             
             yield return null;
             
-            Assert.Greater(gameContorl.score,score);
+            Assert.AreEqual(score + 1,GameControl.Instance.score);
         }
 
         [UnityTest]
         public IEnumerator _Bird_Trigger_Collide_With_Not_Column_Tag_to_Not_Change_Score()
         {
-            var gameContorl = new GameObject().AddComponent<GameControl>();
+            var score = GameControl.Instance.score;
+            
+            var collider = new GameObject().AddComponent<BoxCollider2D>();
 
             yield return null;
 
-            var score = gameContorl.score;
-
-            bird.SendMessage("OnTriggerEnter2D",new Collider2D());
+            bird.SendMessage("OnTriggerEnter2D",collider);
             
             yield return null;
             
-            Assert.AreEqual(gameContorl.score,score);
+            Assert.AreEqual(GameControl.Instance.score,score);
         }
         
     }
     
     public class GameControlTest
     {
-        private GameControl gameControl;
-        
+
         [SetUp]
         public void BeforeEveryTest()
         {
-            if (GameControl.instance != null)
-            {
-                GameObject.Destroy(GameControl.instance.gameObject);
-            }
-            
-            gameControl = new GameObject("GameControl").AddComponent<GameControl>();
-            
-            gameControl.scoreText = new GameObject().AddComponent<Text>();
-            gameControl.gameOvertext = new GameObject();
+            GameControl.Instance.scoreText = new GameObject("Score Text").AddComponent<Text>();
+            GameControl.Instance.gameOvertext = new GameObject("Game Over Text");
+            GameControl.Instance.Reset();
 
         }
-
+        
+        
         [Test]
         public void _Bird_Scored_then_Displayd_Text_Contain_Updated_Score()
         {
-            gameControl.BirdScored();
+            
+            GameControl.Instance.BirdScored();
 
-            Assert.IsTrue(gameControl.scoreText.text.Contains(gameControl.score.ToString()));
+            Assert.IsTrue(GameControl.Instance.scoreText.text.Contains(GameControl.Instance.score.ToString()));
         }
 
         [UnityTest]
@@ -179,7 +170,7 @@ namespace FlappyBird.PlayModeTest
         {
             var scrollingObject = new GameObject().AddComponent<ScrollingObject>();
             
-            gameControl.scrollSpeed = 0f;
+            GameControl.Instance.scrollSpeed = 0f;
 
             yield return null;
             yield return new WaitForFixedUpdate();
@@ -192,15 +183,13 @@ namespace FlappyBird.PlayModeTest
         {
             var scrollingObject = new GameObject().AddComponent<ScrollingObject>();
 
-            gameControl.gameOver = true;
+            GameControl.Instance.gameOver = true;
 
             yield return null;
             yield return new WaitForFixedUpdate();
 
             Assert.AreEqual(Vector2.zero, scrollingObject.GetComponent<Rigidbody2D>().velocity);
         }
-        
-
     }
 
 

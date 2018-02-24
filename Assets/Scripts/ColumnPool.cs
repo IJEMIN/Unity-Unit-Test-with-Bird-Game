@@ -38,7 +38,7 @@ public class ColumnPool : MonoBehaviour
     {
         timeSinceLastSpawned += Time.deltaTime;
 
-        if (GameControl.instance.gameOver == false && timeSinceLastSpawned >= spawnRate) 
+        if (GameControl.Instance.gameOver == false && timeSinceLastSpawned >= spawnRate) 
         {   
             timeSinceLastSpawned = 0f;
 

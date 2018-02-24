@@ -56,19 +56,19 @@ public class Bird : MonoBehaviour
 		anim.SetTrigger("Die");
 		//...and tell the game control about it.
 
-		if (GameControl.instance != null)
-		{
-			GameControl.instance.BirdDied();
-		}
+
+		GameControl.Instance.BirdDied();
+		
 	}
 	
 	void OnTriggerEnter2D(Collider2D other)
 	{
-
-		//If the bird hits the trigger collider in between the columns then
-		//tell the game control that the bird scored.
-		GameControl.instance.BirdScored();
-
+		if (other.CompareTag("Column"))
+		{
+			//If the bird hits the trigger collider in between the columns then
+			//tell the game control that the bird scored.
+			GameControl.Instance.BirdScored();
+		}
 	}
 
 	public void Jump()

@@ -17,7 +17,7 @@ public class ScrollingObject : MonoBehaviour
 		
 		rb2d.bodyType = RigidbodyType2D.Kinematic;
 		//Start the object moving.
-		rb2d.velocity = new Vector2 (GameControl.instance.scrollSpeed, 0);
+		rb2d.velocity = new Vector2 (GameControl.Instance.scrollSpeed, 0);
 		
 		
 	}
@@ -25,13 +25,13 @@ public class ScrollingObject : MonoBehaviour
 	void Update()
 	{
 		// If the game is over, stop scrolling.
-		if(GameControl.instance.gameOver == true)
+		if(GameControl.Instance.gameOver == true)
 		{
 			rb2d.velocity = Vector2.zero;
 		}
 		else
 		{
-			rb2d.velocity = new Vector2 (GameControl.instance.scrollSpeed, 0);
+			rb2d.velocity = new Vector2 (GameControl.Instance.scrollSpeed, 0);
 		}
 	}
 }
